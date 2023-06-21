@@ -2,7 +2,13 @@ import java.util.ArrayList;
 
 public class Main {
 
-    public static abstract class Product{
+    public static abstract class Object{
+        public String id;
+        public static class SearchById{
+
+        }
+    }
+    public static abstract class Product extends Object{
         public String id;
         public String title;
         public Integer pages;
@@ -130,10 +136,10 @@ public class Main {
     public static class ProductList{
         public ArrayList<Product> elements;
 
-        public ProductList(){
-            this.elements = new ArrayList<>();
+        public void addElement(Product product){
+            elements.add(product);
         }
-    }
+    }   //
 
     public static class Date{
         public Integer year;
@@ -185,17 +191,128 @@ public class Main {
             sb.append("r.");
             return sb.toString();
         }
-    }
-    public static class Client{
-        //class Client
+    }                                                  //done?
+    public static class Client extends Object{
+        String id;
+        String username;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public Client(String id, String username) {
+            this.id = id;
+            this.username = username;
+        }
     }
 
-    public static class Order{
-        //class Order
+    public static class ClientList{
+        ArrayList<Client> elements = new ArrayList<Client>();
+
+        public void addClient(Client client){
+            elements.add(client);
+        }
+
+    }
+
+    public static class Order extends Object{
+        public String id;
+        public Date submitDate;
+        public Date fulfillDate;
+        public Client client;
+        public ArrayList<OrderBuilder> orderContent;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public Date getSubmitDate() {
+            return submitDate;
+        }
+
+        public void setSubmitDate(Date submitDate) {
+            this.submitDate = submitDate;
+        }
+
+        public Date getFulfillDate() {
+            return fulfillDate;
+        }
+
+        public void setFulfillDate(Date fulfillDate) {
+            this.fulfillDate = fulfillDate;
+        }
+
+        public Client getClient() {
+            return client;
+        }
+
+        public void setClient(Client client) {
+            this.client = client;
+        }
+
+        public ArrayList<OrderBuilder> getOrderContent() {
+            return orderContent;
+        }
+
+        public void setOrderContent(ArrayList<OrderBuilder> orderContent) {
+            this.orderContent = orderContent;
+        }
+
+        public Order(String id, Date submitDate, Date fulfillDate, Client client, ArrayList<OrderBuilder> orderContent) {
+            this.id = id;
+            this.submitDate = submitDate;
+            this.fulfillDate = fulfillDate;
+            this.client = client;
+            this.orderContent = orderContent;
+        }
+
+        class OrderBuilder{
+           Product product;
+           Integer amount;
+
+            public Product getProduct() {
+                return product;
+            }
+
+            public void setProduct(Product product) {
+                this.product = product;
+            }
+
+            public Integer getAmount() {
+                return amount;
+            }
+
+            public void setAmount(Integer amount) {
+                this.amount = amount;
+            }
+        }
         public void displayOrder(){
 
         }
+
     }
+
+    public static class OrderList{
+
+    }
+
+    //może warto dodać abstract dla list?
 
     public static class Menu{
         //class Menu
@@ -209,10 +326,19 @@ public class Main {
 }
 
 /*
+Zadania projektowe można realizować w 2-3 osobowych grupach. Przy oddaniu projektu należy określić podział pracy (funkcjonalności/klasy implementowane przez daną osobę)
+
+Ocena uwzględnia następujące elementy:
+- kompletność funkcjonalności - 4p
+- poprawność implementacji i wykorzystanie technik programowania obiektowego (kompozycja, dziedziczenie, polimorfizm, wyjątki) - 4p
+- diagram UML - 2p
+
+
 2) Sklep
         Aplikacja wspomagająca rejestrację zamówień na produkty. Podstawowe funkcjonalności:
         - dodawanie/usuwanie/wyszukiwanie/przeglądanie klientów,
-        - dodawanie/usuwanie/wyszukiwanie/przeglądanie produktów, obsługa 3 kategorii produktów, kategorie produktów powinny posiadać wspólne atrybuty (np.: id, waga, cena) i specyficzne dla danego typu
+        - dodawanie/usuwanie/wyszukiwanie/przeglądanie produktów, obsługa 3 kategorii produktów,
+           kategorie produktów powinny posiadać wspólne atrybuty (np.: id, waga, cena) i specyficzne dla danego typu
         - dodawanie/ przeglądanie zamówień na produkty, zamówienie jest przypisane do danego klienta, zawiera datę złożenia i datę realizacji, może zawierać wiele pozycji
         - wyświetlanie zamówień do przeznaczonych do realizacji sortowanych względem daty
         - zapis/odczyt z pliku
