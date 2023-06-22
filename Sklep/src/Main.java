@@ -4,12 +4,8 @@ public class Main {
 
     public static abstract class Object{
         public String id;
-        public static class SearchById{
-
-        }
     }
     public static abstract class Product extends Object{
-        public String id;
         public String title;
         public Integer pages;
         public Double price;
@@ -133,14 +129,6 @@ public class Main {
         }
     }
 
-    public static class ProductList{
-        public ArrayList<Product> elements;
-
-        public void addElement(Product product){
-            elements.add(product);
-        }
-    }   //
-
     public static class Date{
         public Integer year;
         public Integer month;
@@ -193,7 +181,6 @@ public class Main {
         }
     }                                                  //done?
     public static class Client extends Object{
-        String id;
         String username;
 
         public String getId() {
@@ -216,19 +203,98 @@ public class Main {
             this.id = id;
             this.username = username;
         }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("klient:");
+            sb.append("id: ").append(id);
+            sb.append(", username: ").append(username);
+            return sb.toString();
+        }
+    }
+/*
+    public static abstract class List extends Object{
+        //
+    }
+*/
+
+    public static class ProductList{
+        public ArrayList<Product> elements;
+
+        public void addElement(Product product){
+            elements.add(product);
+        }
     }
 
     public static class ClientList{
         ArrayList<Client> elements = new ArrayList<Client>();
+        private boolean clientIdExists(String id){
+            for (Client s : elements){
+                if(s.id == id) {
+                    //System.out.println("Klient id " + id + " istnieje");
+                    return true;
+                }
+            }
+            //System.out.println("Nie znaleziono klienta id " + id + "");
+            return false;
+        }
 
         public void addClient(Client client){
-            elements.add(client);
+            if(!this.clientIdExists(client.id)) {
+                elements.add(client);
+                System.out.println("Dodano klienta id " + client.id);
+            }
+            else{
+                System.out.println("Klient id " + client.id + "już istnieje, nie utworzono nowego klienta");
+            }
         }
+
+        public void removeClient(String id){
+            for (Client s : elements){
+                if(this.clientIdExists(id)){
+                    elements.remove(s);
+                    System.out.println("Usunięto klienta id " + s.id);
+                    break;
+                }
+                else if (!this.clientIdExists(id)) {
+                    System.out.println("Klient id " + id + " nie istnieje, nie usunięto klienta");
+                }
+            }
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("\nLista klientów:\n");
+
+            for (Client s : elements){
+                sb.append(s).append("\n");
+            }
+            return sb.toString();
+        }
+
+        public String clientSearchById(String id){
+            final StringBuilder sb = new StringBuilder("Szukaj klienta po id "+ id + ":\n");
+
+
+                if(this.clientIdExists(id)){
+                    for (Client s : elements) {
+                        if (this.clientIdExists(id)) {
+                            sb.append(s.toString());
+                            break;
+                        }
+                    }
+                }
+                else{
+                    sb.append("Klient id " + id + " nie istnieje, nie usunięto klienta");
+                }
+            return sb.toString();
+        }
+
+
 
     }
 
     public static class Order extends Object{
-        public String id;
         public Date submitDate;
         public Date fulfillDate;
         public Client client;
@@ -319,9 +385,27 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        Book txt = new Book("id","title",2,3.00, "sci-fi");
-        System.out.println(txt.toString());
-        //main
+        Client cl1 = new Client("1","one");
+        Client cl2 = new Client("2","two");
+        Client cl3 = new Client("3","three");
+        ClientList clientList = new ClientList();
+
+        clientList.addClient(cl1);
+        clientList.addClient(cl2);
+        clientList.addClient(cl3);
+
+        System.out.println(clientList.toString());
+
+        clientList.removeClient("1");
+        clientList.removeClient("1");
+
+        System.out.println(clientList.toString());
+
+        clientList.addClient(cl1);
+
+        System.out.println(clientList.toString());
+
+        System.out.println(clientList.clientSearchById("4"));
     }
 }
 
