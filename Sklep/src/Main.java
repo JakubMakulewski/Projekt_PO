@@ -1,13 +1,15 @@
 import java.util.ArrayList;
+import java.io.Serializable;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.util.Scanner;
 
 public class Main {
 
-    public static abstract class Object{
+    public static abstract class Object implements Serializable{
         public String id;
-
-        public String getId() {
-            return id;
-        }
 
         public void setId(String id) {
             this.id = id;
@@ -19,31 +21,15 @@ public class Main {
         public Double price;
         public String summary;
 
-        String getTitle(){
-            return this.title;
-        }
         void setTitle(String title){
             this.title = title;
-        }
-        Integer getPages(){
-            return this.pages;
         }
         void setPages(Integer pages){
             this.pages = pages;
         }
-        Double getPrice(){
-            return this.price;
-        }
+
         void setPrice(Double price){
             this.price = price;
-        }
-
-        public String getSummary() {
-            return summary;
-        }
-
-        public void setSummary(String summary) {
-            this.summary = summary;
         }
 
         public Product(String id, String title, Integer pages, Double price){
@@ -55,22 +41,22 @@ public class Main {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("produkt:    ");
-            sb.append("id: ").append(id);
-            sb.append(", kategoria produktu: ").append(this.getClass().getName());
-            sb.append(", cena: ").append(price);
-            sb.append(", tytuł: ").append(title);
-            sb.append(", liczba stron: ").append(pages);
-            return sb.toString();
+            String sb = "produkt:    " + "id: " + id +
+                    ", kategoria produktu: " + this.getClass().getName() +
+                    ", cena: " + price +
+                    ", tytuł: " + title +
+                    ", liczba stron: " + pages;
+            return sb;
+        }
+
+        public String summaryToString() {
+            String sb = "Opis produktu:\n" + summary + '\n';
+            return sb;
         }
     }
 
-    public static class Book extends Product{
+    public static class Book extends Product implements Serializable{
         public String genre;
-
-        public String getGenre() {
-            return genre;
-        }
 
         public void setGenre(String genre) {
             this.genre = genre;
@@ -82,26 +68,19 @@ public class Main {
         }
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("id: ").append(id);
-            sb.append("     Tytuł: '").append(title);
-            sb.append("', Gatunek: ").append(genre);
-            sb.append(", Liczba stron: ").append(pages);
-            sb.append(", Cena:").append(price).append("PLN");
-            return sb.toString();
-        }
-        void setBookId(String id){
-            this.id = id;
+            String sb = "id: " + id +
+                    "     Tytuł: '" + title +
+                    "', Gatunek: " + genre +
+                    ", Liczba stron: " + pages +
+                    ", Cena:" + price + "PLN";
+            return sb;
         }
 
     }
 
-    public static class Textbook extends Product{
+    public static class Textbook extends Product implements Serializable{
         String edition;
 
-        public String getEdition() {
-            return edition;
-        }
 
         public void setEdition(String edition) {
             this.edition = edition;
@@ -113,22 +92,17 @@ public class Main {
         }
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("id: ").append(id);
-            sb.append("     Tytuł: '").append(title);
-            sb.append("', Wydanie: ").append(edition);
-            sb.append(", Liczba stron: ").append(pages);
-            sb.append(", Cena:").append(price).append("PLN");
-            return sb.toString();
+            String sb = "id: " + id +
+                    "     Tytuł: '" + title +
+                    "', Wydanie: " + edition +
+                    ", Liczba stron: " + pages +
+                    ", Cena:" + price + "PLN";
+            return sb;
         }
     }
 
-    public static class Magazine extends Product{
+    public static class Magazine extends Product implements Serializable{
         String subject;
-
-        public String getSubject() {
-            return subject;
-        }
 
         public void setSubject(String subject) {
             this.subject = subject;
@@ -141,44 +115,19 @@ public class Main {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("id: ").append(id);
-            sb.append("     Tytuł: ").append(title);
-            sb.append(", Tematyka: ").append(subject);
-            sb.append(", Liczba stron: ").append(pages);
-            sb.append(", Cena:").append(price).append("PLN");
-            return sb.toString();
+            String sb = "id: " + id +
+                    "     Tytuł: " + title +
+                    ", Tematyka: " + subject +
+                    ", Liczba stron: " + pages +
+                    ", Cena:" + price + "PLN";
+            return sb;
         }
     }
 
-    public static class Date{
+    public static class Date implements Serializable{
         public Integer year;
         public Integer month;
         public Integer day;
-
-        public Integer getYear() {
-            return year;
-        }
-
-        public void setYear(Integer year) {
-            this.year = year;
-        }
-
-        public Integer getMonth() {
-            return month;
-        }
-
-        public void setMonth(Integer month) {
-            this.month = month;
-        }
-
-        public Integer getDay() {
-            return day;
-        }
-
-        public void setDay(Integer day) {
-            this.day = day;
-        }
 
         public Date(Integer year, Integer month, Integer day) {
             this.year = year;
@@ -194,31 +143,19 @@ public class Main {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            sb.append(day);
-            sb.append(".").append(month);
-            sb.append(".").append(year);
-            sb.append("r.");
-            return sb.toString();
+            String sb = day +
+                    "." + month +
+                    "." + year +
+                    "r.";
+            return sb;
         }
     }                                                  //done?
-    public static class Client extends Object{
+    public static class Client extends Object implements Serializable{
         String username;
 
-        public String getId() {
-            return id;
-        }
 
         public void setId(String id) {
             this.id = id;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
         }
 
         public Client(String id, String username) {
@@ -228,14 +165,13 @@ public class Main {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("klient ");
-            sb.append("id: ").append(id);
-            sb.append(", username: ").append(username);
-            return sb.toString();
+            String sb = "klient " + "id: " + id +
+                    ", username: " + username;
+            return sb;
         }
     }
 
-    public static class ProductList{
+    public static class ProductList implements Serializable{
         ArrayList<Product> elements = new ArrayList<Product>();
         private boolean productIdExists(String id){
             for (Product s : elements){
@@ -300,7 +236,7 @@ public class Main {
         }
     }
 
-    public static class ClientList{
+    public static class ClientList implements Serializable{
         ArrayList<Client> elements = new ArrayList<Client>();
         private boolean clientIdExists(String id){
             for (Client s : elements){
@@ -366,7 +302,7 @@ public class Main {
 
     }
 
-    public static class Order extends Object{
+    public static class Order extends Object implements Serializable{
         public Date submitDate;
         public Date fulfillDate;
         public Client client;
@@ -420,25 +356,9 @@ public class Main {
     }
 
 
-    public static class OrderBuilder{
+    public static class OrderBuilder implements Serializable{
         Product product;
         Integer amount;
-
-        public Product getProduct() {
-            return product;
-        }
-
-        public void setProduct(Product product) {
-            this.product = product;
-        }
-
-        public Integer getAmount() {
-            return amount;
-        }
-
-        public void setAmount(Integer amount) {
-            this.amount = amount;
-        }
 
         public OrderBuilder(Product product, Integer amount) {
             this.product = product;
@@ -446,7 +366,7 @@ public class Main {
         }
     }
 
-    public static class OrderList{
+    public static class OrderList implements Serializable{
         ArrayList<Order> elements = new ArrayList<Order>();
 
         private boolean orderIdExists(String id){
@@ -525,8 +445,61 @@ public class Main {
 
             return sb.toString();
         }
-    }   //WiP   -   sortowanie w unfulfillSortedToString()
+    }   //dodać   -   sortowanie w unfulfillSortedToString()          [Comparator?    Collections?!]
 
+    public static class Compound implements Serializable{
+         ClientList clientList = new ClientList();
+         ProductList productList = new ProductList();
+         OrderList orderList = new OrderList();
+
+        public Compound(ClientList clientList, ProductList productList, OrderList orderList) {
+            this.clientList = clientList;
+            this.productList = productList;
+            this.orderList = orderList;
+        }
+    }
+
+    public static class SaverLoader{
+        public void saveCompound(String filePath, Compound compound){
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+                ObjectOutputStream pictureOutputStream = new ObjectOutputStream(fileOutputStream);
+
+                pictureOutputStream.writeObject(compound);
+
+                pictureOutputStream.close();
+                fileOutputStream.close();
+
+                System.out.println("Pomyślnie zapisano zestaw danych\n");
+            }
+            catch (Exception e){
+                System.out.println("Błąd: Zapisywanie danych nie powiodło się\n");
+                e.printStackTrace();
+            }
+        }
+
+        Compound loadCompound(String filePath, Compound currentState){
+            try{
+                FileInputStream fileInputStream = new FileInputStream(filePath);
+                ObjectInputStream pictureInputStream = new ObjectInputStream(fileInputStream);
+
+                Compound loaded = (Compound) pictureInputStream.readObject();
+
+                pictureInputStream.close();
+                fileInputStream.close();
+
+                System.out.println("Pomyślnie wczytano zestaw danych\n");
+
+                return loaded;
+            }
+            catch(Exception e){
+                System.out.println("Błąd: Wczytywanie danych nie powiodło się\n");
+                e.printStackTrace();
+            }
+
+            return currentState;
+        }
+    }
     public static class Menu{
         //class Menu
     }
@@ -562,7 +535,7 @@ public class Main {
         System.out.println(date.toString());
 
         OrderBuilder orderBuilder = new OrderBuilder(cl1, 1);
-        ArrayList<OrderBuilder> orderContent = new ArrayList<OrderBuilder>();
+        ArrayList<OrderBuilder> orderContent = new ArrayList<>();
         orderContent.add(orderBuilder);
 
         Order order = new Order("11", date, client,orderContent);
@@ -581,6 +554,26 @@ public class Main {
         System.out.println(orderList.toString());
         System.out.println(orderList.unfulfillSortedToString());
 
+        ClientList clientList = new ClientList();
+        clientList.addClient(client);
+
+
+
+        Compound compound = new Compound(clientList, productList, orderList);
+
+        SaverLoader saverLoader = new SaverLoader();
+        saverLoader.saveCompound("data.txt", compound);
+
+        System.out.println(clientList.toString());
+        clientList = new ClientList();
+        System.out.println(clientList.toString());
+
+        compound = new Compound(new ClientList(),new ProductList(), new OrderList());
+
+        compound = saverLoader.loadCompound("data.txt", compound);
+
+        clientList = compound.clientList;
+        System.out.println(clientList.toString());
     }
 }
 
