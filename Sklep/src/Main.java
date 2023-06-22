@@ -4,18 +4,21 @@ public class Main {
 
     public static abstract class Object{
         public String id;
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
     }
     public static abstract class Product extends Object{
         public String title;
         public Integer pages;
         public Double price;
+        public String summary;
 
-        String getId(){
-            return this.id;
-        }
-        void setId(String id){
-            this.id = id;
-        }
         String getTitle(){
             return this.title;
         }
@@ -35,16 +38,35 @@ public class Main {
             this.price = price;
         }
 
+        public String getSummary() {
+            return summary;
+        }
+
+        public void setSummary(String summary) {
+            this.summary = summary;
+        }
+
         public Product(String id, String title, Integer pages, Double price){
             setId(id);
             setTitle(title);
             setPages(pages);
             setPrice(price);
         }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("produkt:    ");
+            sb.append("id: ").append(id);
+            sb.append(", kategoria produktu: ").append(this.getClass().getName());
+            sb.append(", cena: ").append(price);
+            sb.append(", tytuł: ").append(title);
+            sb.append(", liczba stron: ").append(pages);
+            return sb.toString();
+        }
     }
 
     public static class Book extends Product{
-        String genre;
+        public String genre;
 
         public String getGenre() {
             return genre;
@@ -62,7 +84,7 @@ public class Main {
         public String toString() {
             final StringBuilder sb = new StringBuilder();
             sb.append("id: ").append(id);
-            sb.append(", Tytuł: '").append(title);
+            sb.append("     Tytuł: '").append(title);
             sb.append("', Gatunek: ").append(genre);
             sb.append(", Liczba stron: ").append(pages);
             sb.append(", Cena:").append(price).append("PLN");
@@ -93,7 +115,7 @@ public class Main {
         public String toString() {
             final StringBuilder sb = new StringBuilder();
             sb.append("id: ").append(id);
-            sb.append(", Tytuł: '").append(title);
+            sb.append("     Tytuł: '").append(title);
             sb.append("', Wydanie: ").append(edition);
             sb.append(", Liczba stron: ").append(pages);
             sb.append(", Cena:").append(price).append("PLN");
@@ -120,8 +142,8 @@ public class Main {
         @Override
         public String toString() {
             final StringBuilder sb = new StringBuilder();
-            sb.append("id: '").append(id);
-            sb.append("', Tytuł: ").append(title);
+            sb.append("id: ").append(id);
+            sb.append("     Tytuł: ").append(title);
             sb.append(", Tematyka: ").append(subject);
             sb.append(", Liczba stron: ").append(pages);
             sb.append(", Cena:").append(price).append("PLN");
@@ -206,23 +228,75 @@ public class Main {
 
         @Override
         public String toString() {
-            final StringBuilder sb = new StringBuilder("klient:");
+            final StringBuilder sb = new StringBuilder("klient ");
             sb.append("id: ").append(id);
             sb.append(", username: ").append(username);
             return sb.toString();
         }
     }
-/*
-    public static abstract class List extends Object{
-        //
-    }
-*/
 
     public static class ProductList{
-        public ArrayList<Product> elements;
+        ArrayList<Product> elements = new ArrayList<Product>();
+        private boolean productIdExists(String id){
+            for (Product s : elements){
+                if(s.id == id) {
+                    //System.out.println("Produkt id " + id + " istnieje");
+                    return true;
+                }
+            }
+            //System.out.println("Nie znaleziono produktu id " + id + "");
+            return false;
+        }
 
-        public void addElement(Product product){
-            elements.add(product);
+        public void addProduct(Product product){
+            if(!this.productIdExists(product.id)) {
+                elements.add(product);
+                System.out.println("Dodano produkt id " + product.id);
+            }
+            else{
+                System.out.println("Produkt id " + product.id + "już istnieje, nie utworzono nowego produktu");
+            }
+        }
+
+        public void removeProduct(String id){
+            for (Product s : elements){
+                if(this.productIdExists(id)){
+                    elements.remove(s);
+                    System.out.println("Usunięto produkt id " + s.id);
+                    break;
+                }
+                else if (!this.productIdExists(id)) {
+                    System.out.println("Produkt id " + id + " nie istnieje, nie usunięto produktu");
+                }
+            }
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("\nLista produktów:\n");
+
+            for (Product s : elements){
+                sb.append(s).append("\n");
+            }
+            return sb.toString();
+        }
+
+        public String searchById(String id){
+            final StringBuilder sb = new StringBuilder("Szukaj produkt po id '"+ id + "':\n");
+
+
+            if(this.productIdExists(id)){
+                for (Product s : elements) {
+                    if (this.productIdExists(id)) {
+                        sb.append(s.toString());
+                        break;
+                    }
+                }
+            }
+            else{
+                sb.append("Produkt id '" + id + "' nie istnieje");
+            }
+            return sb.toString();
         }
     }
 
@@ -272,8 +346,8 @@ public class Main {
             return sb.toString();
         }
 
-        public String clientSearchById(String id){
-            final StringBuilder sb = new StringBuilder("Szukaj klienta po id "+ id + ":\n");
+        public String searchById(String id){
+            final StringBuilder sb = new StringBuilder("Szukaj klienta po id '"+ id + "':\n");
 
 
                 if(this.clientIdExists(id)){
@@ -285,12 +359,10 @@ public class Main {
                     }
                 }
                 else{
-                    sb.append("Klient id " + id + " nie istnieje, nie usunięto klienta");
+                    sb.append("Klient id '" + id + "' nie istnieje");
                 }
             return sb.toString();
         }
-
-
 
     }
 
@@ -300,20 +372,12 @@ public class Main {
         public Client client;
         public ArrayList<OrderBuilder> orderContent;
 
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
+        public Order(String id, Date submitDate, Client client, ArrayList<OrderBuilder> orderContent) {       //Date fulfillDate
             this.id = id;
-        }
-
-        public Date getSubmitDate() {
-            return submitDate;
-        }
-
-        public void setSubmitDate(Date submitDate) {
             this.submitDate = submitDate;
+            //this.fulfillDate = fulfillDate;
+            this.client = client;
+            this.orderContent = orderContent;
         }
 
         public Date getFulfillDate() {
@@ -324,88 +388,199 @@ public class Main {
             this.fulfillDate = fulfillDate;
         }
 
-        public Client getClient() {
-            return client;
-        }
-
-        public void setClient(Client client) {
-            this.client = client;
-        }
-
-        public ArrayList<OrderBuilder> getOrderContent() {
-            return orderContent;
-        }
-
-        public void setOrderContent(ArrayList<OrderBuilder> orderContent) {
-            this.orderContent = orderContent;
-        }
-
-        public Order(String id, Date submitDate, Date fulfillDate, Client client, ArrayList<OrderBuilder> orderContent) {
-            this.id = id;
-            this.submitDate = submitDate;
-            this.fulfillDate = fulfillDate;
-            this.client = client;
-            this.orderContent = orderContent;
-        }
-
-        class OrderBuilder{
-           Product product;
-           Integer amount;
-
-            public Product getProduct() {
-                return product;
+        public String displayContent(){
+            final StringBuilder sb = new StringBuilder();
+            int i = 1;
+            for (OrderBuilder s : this.orderContent){
+                sb.append("#" + i + " ");
+                sb.append("id: " + s.product.id);
+                sb.append(", tytuł: " + s.product.title);
+                sb.append(", cena: " + s.product.price + "PLN");
+                sb.append(", ilość: " + s.amount);
+                i++;
             }
-
-            public void setProduct(Product product) {
-                this.product = product;
-            }
-
-            public Integer getAmount() {
-                return amount;
-            }
-
-            public void setAmount(Integer amount) {
-                this.amount = amount;
-            }
-        }
-        public void displayOrder(){
-
+            return sb.toString();
         }
 
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("Zamówienie " + id + "\n");
+            sb.append("Data przyjęcia:      ").append(submitDate).append("\n");
+            sb.append("Data realizacji:     ");
+            if(fulfillDate != null) {
+                sb.append(fulfillDate).append("\n");
+            }
+            else {
+                sb.append("N/A").append("\n");
+            }
+            sb.append("Klient:              ").append(client).append("\n\n");
+            sb.append("Zawartość zamówienia:\n").append(displayContent() + "\n");
+            return sb.toString();
+        }
+    }
+
+
+    public static class OrderBuilder{
+        Product product;
+        Integer amount;
+
+        public Product getProduct() {
+            return product;
+        }
+
+        public void setProduct(Product product) {
+            this.product = product;
+        }
+
+        public Integer getAmount() {
+            return amount;
+        }
+
+        public void setAmount(Integer amount) {
+            this.amount = amount;
+        }
+
+        public OrderBuilder(Product product, Integer amount) {
+            this.product = product;
+            this.amount = amount;
+        }
     }
 
     public static class OrderList{
+        ArrayList<Order> elements = new ArrayList<Order>();
 
-    }
+        private boolean orderIdExists(String id){
+            for (Order s : elements){
+                if(s.id == id) {
+                    //System.out.println("Zamówienie id " + id + " istnieje");
+                    return true;
+                }
+            }
+            //System.out.println("Nie znaleziono zamówienia id " + id + "");
+            return false;
+        }
 
-    //może warto dodać abstract dla list?
+        public void addOrder(Order order){
+            if(!this.orderIdExists(order.id)) {
+                elements.add(order);
+                System.out.println("Dodano zamówienie id " + order.id);
+            }
+            else{
+                System.out.println("Zamówienie id " + order.id + "już istnieje, nie utworzono nowego zamówienia");
+            }
+        }
+
+        public void removeOrder(String id){
+            for (Order s : elements){
+                if(this.orderIdExists(id)){
+                    elements.remove(s);
+                    System.out.println("Usunięto zamówienie id " + s.id);
+                    break;
+                }
+                else if (!this.orderIdExists(id)) {
+                    System.out.println("Zamówienie id " + id + " nie istnieje, nie usunięto zamówienia");
+                }
+            }
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("\nLista zamówień:\n");
+
+            for (Order s : elements){
+                sb.append(s).append("\n");
+            }
+            return sb.toString();
+        }
+
+        public String searchById(String id){
+            final StringBuilder sb = new StringBuilder("Szukaj zamówienia po id '"+ id + "':\n");
+
+
+            if(this.orderIdExists(id)){
+                for (Order s : elements) {
+                    if (this.orderIdExists(id)) {
+                        sb.append(s.toString());
+                        break;
+                    }
+                }
+            }
+            else{
+                sb.append("Zamówienie id '" + id + "' nie istnieje");
+            }
+            return sb.toString();
+        }
+
+        public String unfulfillSortedToString(){
+            ArrayList<Order> sortingList = new ArrayList<Order>();
+            final StringBuilder sb = new StringBuilder("Do realizacji:\n");
+
+            for(Order s : elements){
+                if (s.fulfillDate == null){
+                    sortingList.add(s);
+                }
+            }
+
+            sb.append(sortingList.toString());
+
+            return sb.toString();
+        }
+    }   //WiP   -   sortowanie w unfulfillSortedToString()
 
     public static class Menu{
         //class Menu
     }
 
     public static void main(String[] args) {
-        Client cl1 = new Client("1","one");
-        Client cl2 = new Client("2","two");
-        Client cl3 = new Client("3","three");
-        ClientList clientList = new ClientList();
 
-        clientList.addClient(cl1);
-        clientList.addClient(cl2);
-        clientList.addClient(cl3);
+        Book cl1 = new Book("1","one", 5,1.99,"gen1");
+        Book cl2 = new Book("2","two", 10,2.99,"gen2");
+        Textbook cl3 = new Textbook("3","three", 15,3.99,"gen3");
+        ProductList productList = new ProductList();
 
-        System.out.println(clientList.toString());
+        productList.addProduct(cl1);
+        productList.addProduct(cl2);
+        productList.addProduct(cl3);
 
-        clientList.removeClient("1");
-        clientList.removeClient("1");
+        System.out.println(productList.toString());
 
-        System.out.println(clientList.toString());
+        productList.removeProduct("1");
+        productList.removeProduct("1");
 
-        clientList.addClient(cl1);
+        System.out.println(productList.toString());
 
-        System.out.println(clientList.toString());
+        productList.addProduct(cl1);
 
-        System.out.println(clientList.clientSearchById("4"));
+        System.out.println(productList.toString());
+
+        System.out.println(productList.searchById("4"));
+
+        Client client = new Client("9", "user");
+        Date date = new Date(2000,1,1);
+
+        System.out.println(client.toString());
+        System.out.println(date.toString());
+
+        OrderBuilder orderBuilder = new OrderBuilder(cl1, 1);
+        ArrayList<OrderBuilder> orderContent = new ArrayList<OrderBuilder>();
+        orderContent.add(orderBuilder);
+
+        Order order = new Order("11", date, client,orderContent);
+        Order order2 = new Order("21", date, client,orderContent);
+        Order order3 = new Order("31", date, client,orderContent);
+        order2.fulfillDate = date;
+
+        System.out.println(order.toString());
+
+        OrderList orderList = new OrderList();
+
+        orderList.addOrder(order);
+        orderList.addOrder(order2);
+        orderList.addOrder(order3);
+
+        System.out.println(orderList.toString());
+        System.out.println(orderList.unfulfillSortedToString());
+
     }
 }
 
