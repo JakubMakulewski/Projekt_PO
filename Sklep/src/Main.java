@@ -9,40 +9,26 @@ import java.util.Scanner;
 public class Main {
 
     public static abstract class Object implements Serializable{
-        public String id;
+        protected String id;
 
-        public void setId(String id) {
-            this.id = id;
-        }
     }
     public static abstract class Product extends Object{
-        public String title;
-        public Integer pages;
-        public Double price;
-        public String summary;
-
-        void setTitle(String title){
-            this.title = title;
-        }
-        void setPages(Integer pages){
-            this.pages = pages;
-        }
-
-        void setPrice(Double price){
-            this.price = price;
-        }
+        protected String title;
+        protected Integer pages;
+        protected Double price;
+        protected String summary;
 
         public Product(String id, String title, Integer pages, Double price){
-            setId(id);
-            setTitle(title);
-            setPages(pages);
-            setPrice(price);
+            this.id = id;
+            this.title = title;
+            this.pages = pages;
+            this.price = price;
         }
 
         @Override
         public String toString() {
             String sb = "produkt:    " + "id: " + id +
-                    ", kategoria produktu: " + this.getClass().getName() +
+                    ", kategoria produktu: " + this.getClass().getSimpleName() +
                     ", cena: " + price +
                     ", tytuł: " + title +
                     ", liczba stron: " + pages;
@@ -57,6 +43,10 @@ public class Main {
 
     public static class Book extends Product implements Serializable{
         public String genre;
+
+        public String getGenre() {
+            return genre;
+        }
 
         public void setGenre(String genre) {
             this.genre = genre;
@@ -79,7 +69,8 @@ public class Main {
     }
 
     public static class Textbook extends Product implements Serializable{
-        String edition;
+        public String edition;
+
 
 
         public void setEdition(String edition) {
@@ -102,7 +93,11 @@ public class Main {
     }
 
     public static class Magazine extends Product implements Serializable{
-        String subject;
+        public String subject;
+
+        public String getSubject() {
+            return subject;
+        }
 
         public void setSubject(String subject) {
             this.subject = subject;
@@ -110,7 +105,7 @@ public class Main {
 
         public Magazine(String id, String title, Integer pages, Double price, String subject) {
             super(id, title, pages, price);
-            setSubject(subject);
+            this.subject = subject;
         }
 
         @Override
@@ -125,9 +120,33 @@ public class Main {
     }
 
     public static class Date implements Serializable{
-        public Integer year;
-        public Integer month;
-        public Integer day;
+        private Integer year;
+        private Integer month;
+        private Integer day;
+
+        public Integer getYear() {
+            return year;
+        }
+
+        public void setYear(Integer year) {
+            this.year = year;
+        }
+
+        public Integer getMonth() {
+            return month;
+        }
+
+        public void setMonth(Integer month) {
+            this.month = month;
+        }
+
+        public Integer getDay() {
+            return day;
+        }
+
+        public void setDay(Integer day) {
+            this.day = day;
+        }
 
         public Date(Integer year, Integer month, Integer day) {
             this.year = year;
@@ -149,13 +168,16 @@ public class Main {
                     "r.";
             return sb;
         }
-    }                                                  //done?
+    }
     public static class Client extends Object implements Serializable{
-        String username;
+        private String username;
 
+        public String getUsername() {
+            return username;
+        }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setUsername(String username) {
+            this.username = username;
         }
 
         public Client(String id, String username) {
@@ -172,7 +194,7 @@ public class Main {
     }
 
     public static class ProductList implements Serializable{
-        ArrayList<Product> elements = new ArrayList<Product>();
+        private ArrayList<Product> elements = new ArrayList<Product>();
         private boolean productIdExists(String id){
             for (Product s : elements){
                 if(s.id == id) {
@@ -234,10 +256,22 @@ public class Main {
             }
             return sb.toString();
         }
+
+        public Product searchByIdProduct(String id){
+            if(this.productIdExists(id)){
+                for (Product s : elements) {
+                    return s;
+                }
+            }
+            else{
+                System.out.println("Produkt id '" + id + "' nie istnieje");
+            }
+            return null;
+        }
     }
 
     public static class ClientList implements Serializable{
-        ArrayList<Client> elements = new ArrayList<Client>();
+        private ArrayList<Client> elements = new ArrayList<Client>();
         private boolean clientIdExists(String id){
             for (Client s : elements){
                 if(s.id == id) {
@@ -300,13 +334,25 @@ public class Main {
             return sb.toString();
         }
 
+        public Client searchByIdClient(String id){
+            if(this.clientIdExists(id)){
+                for (Client s : elements) {
+                    return s;
+                }
+            }
+            else{
+                System.out.println("Klient id '" + id + "' nie istnieje");
+            }
+            return null;
+        }
+
     }
 
     public static class Order extends Object implements Serializable{
-        public Date submitDate;
-        public Date fulfillDate;
-        public Client client;
-        public ArrayList<OrderBuilder> orderContent;
+        private Date submitDate;
+        private Date fulfillDate;
+        private Client client;
+        private ArrayList<OrderBuilder> orderContent;
 
         public Order(String id, Date submitDate, Client client, ArrayList<OrderBuilder> orderContent) {       //Date fulfillDate
             this.id = id;
@@ -357,8 +403,8 @@ public class Main {
 
 
     public static class OrderBuilder implements Serializable{
-        Product product;
-        Integer amount;
+        public Product product;
+        public Integer amount;
 
         public OrderBuilder(Product product, Integer amount) {
             this.product = product;
@@ -367,7 +413,7 @@ public class Main {
     }
 
     public static class OrderList implements Serializable{
-        ArrayList<Order> elements = new ArrayList<Order>();
+        private ArrayList<Order> elements = new ArrayList<Order>();
 
         private boolean orderIdExists(String id){
             for (Order s : elements){
@@ -430,7 +476,19 @@ public class Main {
             }
             return sb.toString();
         }
-
+//---------------------------------------------------------------------------------------
+        public Order searchByIdClient(String id){
+            if(this.orderIdExists(id)){
+                for (Order s : elements) {
+                    return s;
+                }
+            }
+            else{
+                System.out.println("Zamówienie id '" + id + "' nie istnieje");
+            }
+            return null;
+        }
+//---------------------------------------------------------------------------------------
         public String unfulfillSortedToString(){
             ArrayList<Order> sortingList = new ArrayList<Order>();
             final StringBuilder sb = new StringBuilder("Do realizacji:\n");
@@ -501,11 +559,396 @@ public class Main {
         }
     }
     public static class Menu{
-        //class Menu
+        private Compound compound = new Compound(new ClientList(), new ProductList(), new OrderList());
+        private SaverLoader saverLoader = new SaverLoader();
+
+        Scanner scanner = new Scanner(System.in);
+        String option = new String();
+
+        public void startTest(){
+            System.out.println("Uruchamianie aplikacji...\n\n");
+        }
+        public void addObject(){
+            do{
+            System.out.println("Wybierz typ obiektu do dodania:\n" +
+                    "1) Klient\n" +
+                    "2) Produkt\n" +
+                    "3) Zamówienie\n" +
+                    "Wpisz 'anuluj', żeby wrócić do menu głównego");
+
+            option = scanner.nextLine();
+
+
+            switch (option) {
+                case "1":
+                    System.out.println("Nowy klient:\n");
+
+                    System.out.println("Wpisz id:");
+                    String clientId = scanner.nextLine();
+
+                    System.out.println("Wpisz nazwę użytkownika:");
+                    String clientUsername = scanner.nextLine();
+
+                    Client newClient = new Client(clientId, clientUsername);
+                    compound.clientList.addClient(newClient);
+
+                    break;
+
+                case "2":
+                    System.out.println("Nowy produkt:\n");
+                    System.out.println("Wybierz rodzaj nowego produktu:\n" +
+                            "1) Książka\n" +
+                            "2) Podręcznik\n" +
+                            "3) Magazyn\n");
+
+                    String pickType = scanner.nextLine();
+
+                    switch (pickType) {
+                        case "1":
+                            System.out.println("Nowa książka:");
+                            System.out.println("Wpisz id:");
+                            String bookId = scanner.nextLine();
+
+                            System.out.println("Wpisz tytuł:");
+                            String bookTitle = scanner.nextLine();
+
+                            System.out.println("Wpisz liczbę stron:");
+                            Integer bookPages = scanner.nextInt();
+
+                            System.out.println("Wpisz cenę:");
+                            Double bookPrice = scanner.nextDouble();
+
+                            scanner.nextLine();                             //przeskakuje z nextDouble na kolejną linijkę inputa
+                            System.out.println("Wpisz gatunek:");
+                            String bookGenre = scanner.nextLine();
+
+                            if (!compound.productList.productIdExists(bookId)) {
+                                Book newBook = new Book(bookId, bookTitle, bookPages, bookPrice, bookGenre);
+                                compound.productList.addProduct(newBook);
+                            } else {
+                                System.out.println("Produkt o tym id już istnieje, tworzenie produktu nie powiodło się");
+                            }
+                            break;
+
+                        case "2":
+                            System.out.println("Nowy podręcznik:");
+                            System.out.println("Wpisz id:");
+                            String textId = scanner.nextLine();
+
+                            System.out.println("Wpisz tytuł:");
+                            String textTitle = scanner.nextLine();
+
+                            System.out.println("Wpisz liczbę stron:");
+                            Integer textPages = scanner.nextInt();
+
+                            System.out.println("Wpisz cenę:");
+                            Double textPrice = scanner.nextDouble();
+
+                            scanner.nextLine();                             //przeskakuje z nextDouble na kolejną linijkę inputa
+                            System.out.println("Wpisz numer wydania:");
+                            String textEdition = scanner.nextLine();
+
+                            if (!compound.productList.productIdExists(textId)) {
+                                Textbook newTextbook = new Textbook(textId, textTitle, textPages, textPrice, textEdition);
+                                compound.productList.addProduct(newTextbook);
+                            } else {
+                                System.out.println("Produkt o tym id już istnieje, tworzenie produktu nie powiodło się");
+                            }
+                            break;
+
+                        case "3":
+                            System.out.println("Nowy magazyn:");
+                            System.out.println("Wpisz id:");
+                            String magId = scanner.nextLine();
+
+                            System.out.println("Wpisz tytuł:");
+                            String magTitle = scanner.nextLine();
+
+                            System.out.println("Wpisz liczbę stron:");
+                            Integer magPages = scanner.nextInt();
+
+                            System.out.println("Wpisz cenę:");
+                            Double magPrice = scanner.nextDouble();
+
+                            scanner.nextLine();                             //przeskakuje z nextDouble na kolejną linijkę inputa
+                            System.out.println("Wpisz tematykę:");
+                            String magSubject = scanner.nextLine();
+
+                            if (!compound.productList.productIdExists(magId)) {
+                                Magazine newMagazine = new Magazine(magId, magTitle, magPages, magPrice, magSubject);
+                                compound.productList.addProduct(newMagazine);
+                            } else {
+                                System.out.println("Produkt o tym id już istnieje, tworzenie produktu nie powiodło się");
+                            }
+                            break;
+                    }
+                    break;
+
+                case "3":
+                    System.out.println("Nowe zamówienie:\n");
+
+                    System.out.println("Wpisz id:");
+                    String ordId = scanner.nextLine();
+
+                    System.out.println("Wpisz datę złożenia (YYYY/MM/DD):");
+                    Integer subDateYear = scanner.nextInt();
+                    Integer subDateMonth = scanner.nextInt();
+                    Integer subDateDay = scanner.nextInt();
+                    Date ordSubDate = new Date(subDateYear, subDateMonth, subDateDay);
+
+                    scanner.nextLine();                             //przeskakuje z nextInt na kolejną linijkę inputa
+                    System.out.println("Wpisz id klienta:");
+                    String ordClientId = scanner.nextLine();
+                    Client ordClient = new Client(null, null);
+
+                    if (compound.clientList.clientIdExists(ordClientId)) {
+                        ordClient.id = compound.clientList.searchByIdClient(ordClientId).id;
+                        ordClient.username = compound.clientList.searchByIdClient(ordClientId).username;
+                    } else {
+                        System.out.println("Ten klient nie istnieje. Tworzenie zamówienia nie powiodło się");
+                        break;
+                    }
+
+                    System.out.println("Wybierz produkty i wyznacz ich ilość");
+                    ArrayList<OrderBuilder> ordOrderContent = new ArrayList<>();
+                    OrderBuilder item = new OrderBuilder(null, null);
+                    String nextItem = "tak";
+
+                    do {
+                        System.out.println("Wprowadź id produktu: ");
+                        String chosenProductId = scanner.nextLine();
+
+                        if (compound.productList.productIdExists(chosenProductId)) {
+                            Product chosenProduct = compound.productList.searchByIdProduct(chosenProductId);
+
+                            item.product = chosenProduct;
+
+                            System.out.println("Wprowadź ilość wybranego produktu: ");
+                            Integer chosenAmount = scanner.nextInt();
+                            item.amount = chosenAmount;
+
+                            item.product = chosenProduct;
+
+                            System.out.println("Czy chcesz dodać kolejną pozycję w zamówieniu? (tak/nie)");
+                            nextItem = scanner.nextLine();
+                        } else {
+                            System.out.println("Ten produkt nie istnieje. Tworzenie zamówienia nie powiodło się");
+                            break;
+                        }
+
+                    }
+                    while (nextItem == "tak");
+
+                    Order newOrder = new Order(ordId, ordSubDate, ordClient, ordOrderContent);
+                    compound.orderList.addOrder(newOrder);
+
+                    break;
+
+            }
+            }while(!"anuluj".equals(option));
+        }
+
+        public void removeObject(){
+
+            do{
+            System.out.println("Wybierz typ obiektu do usunięcia:\n" +
+                    "1) Klient\n" +
+                    "2) Produkt\n" +
+                    "3) Zamówienie\n" +
+                    "Wpisz 'anuluj', żeby wrócić do menu głównego");
+
+            option = scanner.nextLine();
+
+            switch (option) {
+                case "1":
+                    System.out.println("Usuń klienta\nPodaj id klienta do usunięcia");
+                    String idToRemoveClient = scanner.nextLine();
+                    compound.clientList.removeClient(idToRemoveClient);
+                    break;
+
+                case "2":
+                    System.out.println("Usuń produkt\nPodaj id produktu do usunięcia");
+                    String idToRemoveProduct = scanner.nextLine();
+                    compound.productList.removeProduct(idToRemoveProduct);
+                    break;
+
+                case "3":
+                    System.out.println("Usuń zamówienie\nPodaj id zamówienia do usunięcia");
+                    String idToRemoveOrder = scanner.nextLine();
+                    compound.orderList.removeOrder(idToRemoveOrder);
+                    break;
+            }
+
+            }while(!"anuluj".equals(option));
+        }
+
+        public void displayList(){
+
+            do{
+            System.out.println("Wybierz listę do wyświetlenia:\n" +
+                    "1) Klienci\n" +
+                    "2) Produkty\n" +
+                    "3) Zamówienia\n" +
+                    "Wpisz 'anuluj', żeby wrócić do menu głównego");
+
+            option = scanner.nextLine();
+
+            switch (option) {
+                case "1":
+                    System.out.println("Wyświetl klientów\n");
+                    System.out.println(compound.clientList.toString());
+                    break;
+
+                case "2":
+                    System.out.println("Wyświetl produkty\n");
+                    System.out.println(compound.productList.toString());
+                    break;
+
+                case "3":
+                    System.out.println("Wyświetl zamówienia\n");
+                    System.out.println(compound.orderList.toString());
+                    break;
+            }
+
+            }while(!"anuluj".equals(option));
+        }
+
+        public void searchList(){
+            do{
+                System.out.println("Wybierz listę, której element chcesz wyszukać:\n" +
+                        "1) Klienci\n" +
+                        "2) Produkty\n" +
+                        "3) Zamówienia\n" +
+                        "Wpisz 'anuluj', żeby wrócić do menu głównego");
+
+                option = scanner.nextLine();
+
+                switch (option) {
+                    case "1":                                                                   //
+                        System.out.println("Wyszukaj klienta po id:\n");
+                        String searchClientId = scanner.nextLine();
+                        System.out.println(compound.clientList.searchById(searchClientId));
+                        break;
+
+                    case "2":                                                                   //
+                        System.out.println("Wyszukaj produkt po id:\n");
+                        String searchProductId = scanner.nextLine();
+                        System.out.println(compound.productList.searchById(searchProductId));
+                        break;
+
+                    case "3":                                                                   //
+                        System.out.println("Wyszukaj zamówienie po id:\n");
+                        String searchOrderId = scanner.nextLine();
+                        System.out.println(compound.orderList.searchById(searchOrderId));
+                }
+
+            }while(!"anuluj".equals(option));
+        }
+
+        public void unfullDisplay(){
+            compound.orderList.unfulfillSortedToString();
+        }
+
+        public void saveToFile(){
+            System.out.println("Podaj nazwę pliku do zapisu danych:");
+            String fileName = scanner.nextLine();
+            saverLoader.saveCompound(fileName, compound);
+        }
+
+        public void loadFromFile(){
+            System.out.println("Podaj nazwę pliku do wczytania danych:");
+            String fileName = scanner.nextLine();
+            saverLoader.loadCompound(fileName, compound);
+        }
+
+        public void mainMenu(){
+
+            Menu menu = new Menu();
+            menu.startTest();
+            String choice = new String();
+            Scanner scanner = new Scanner(System.in);
+
+
+            while(!"wyjdź".equals(choice)){
+                System.out.println("-    MENU GŁÓWNE    -\n" +
+                        "Wybierz działanie:\n" +
+                        "1) Dodaj klienta/produkt/zamówienie\n" +
+                        "2) Usuń klienta/produkt/zamówienie\n" +
+                        "3) Wyświetl klientów/produkty/zamówienia\n" +
+                        "4) Wyszukaj klienta/produkt/zamówienie\n" +
+                        "5) Wyświetl niezrealizowane zamówienia\n" +
+                        "6) Zapisz dane\n" +
+                        "7) Wczytaj dane\n" +
+                        "Wpisz 'wyjdź' aby zakończyć program");
+
+                choice = scanner.nextLine();
+
+                switch(choice){
+                    case "1":
+                        menu.addObject();
+                        break;
+                    case "2":
+                        menu.removeObject();
+                        break;
+                    case "3":
+                        menu.displayList();
+                        break;
+                    case "4":
+                        menu.searchList();
+                        break;
+                    case "5":
+                        menu.unfullDisplay();
+                        break;
+                    case "6":
+                        menu.saveToFile();
+                        break;
+                    case "7":
+                        menu.loadFromFile();
+                        break;
+                }
+
+            }
+        }
     }
 
     public static void main(String[] args) {
 
+        Menu menu = new Menu();
+
+        menu.mainMenu();
+
+        /*
+        ClientList clientList = new ClientList();
+        ProductList productList = new ProductList();
+        OrderList orderList = new OrderList();
+
+        Menu menu = new Menu();
+        menu.compound.clientList = clientList;
+        menu.compound.productList = productList;
+        menu.compound.orderList = orderList;
+
+        Scanner scanner = new Scanner(System.in);
+        String option = new String();
+
+        menu.addObject();
+        menu.addObject();
+        menu.addObject();
+
+
+        System.out.println(menu.compound.clientList.toString());
+        System.out.println(menu.compound.productList.toString());
+        System.out.println(menu.compound.orderList.toString());
+
+        do{
+
+        }
+        while(!"exit".equals(option));
+        scanner.close();
+         */
+
+
+
+        /*
         Book cl1 = new Book("1","one", 5,1.99,"gen1");
         Book cl2 = new Book("2","two", 10,2.99,"gen2");
         Textbook cl3 = new Textbook("3","three", 15,3.99,"gen3");
@@ -574,6 +1017,14 @@ public class Main {
 
         clientList = compound.clientList;
         System.out.println(clientList.toString());
+        */
+
+
+        /*
+        SaverLoader saverLoader = new SaverLoader();
+        Compound compound = new Compound(new ClientList(),new ProductList(), new OrderList());
+        saverLoader.loadCompound("data.txt",compound);
+         */
     }
 }
 
