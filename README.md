@@ -1,3 +1,5 @@
+TREŚĆ ZADANIA
+-
 Zadania projektowe można realizować w 2-3 osobowych grupach. Przy oddaniu projektu należy określić podział pracy (funkcjonalności/klasy implementowane przez daną osobę)
 
 Ocena uwzględnia następujące elementy:
@@ -16,3 +18,10 @@ Aplikacja wspomagająca rejestrację zamówień na produkty. Podstawowe funkcjon
 !!!WAŻNE!!!
 W main() mają być same funkcje!
 Wszystkie elementy interfejsu (menu, obsługa plików, zmiana danych) mają być wewnątrz metod.
+
+UWAGI
+-
+
+**Backend** działa, całość + zakomentowane testy są na mainie
+
+**Frontend** (klasa Menu()) wymaga kilku poprawek, całość z błędami jest na branchu *finished-buggy*
