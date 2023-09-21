@@ -22,6 +22,6 @@ Wszystkie elementy interfejsu (menu, obsługa plików, zmiana danych) mają być
 UWAGI
 -
 
-**Backend** działa, całość + zakomentowane testy są na mainie
+**"Backend"** działa, całość + zakomentowane testy są na mainie
 
-**Frontend** (klasa Menu()) wymaga kilku poprawek, całość z błędami jest na branchu *finished-buggy*
+**"Frontend"** (klasa Menu()) wymaga kilku poprawek, całość z błędami jest na branchu *finished-buggy*
